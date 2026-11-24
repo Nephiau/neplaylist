@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 // `music-metadata` streams tags through `parseBlob` using browser-native
 // Blob/Uint8Array APIs, so the build stays free of Buffer shims.
 export default defineConfig({
+  base: '/neplaylist/',
   plugins: [react()],
   build: {
     target: 'es2020',
