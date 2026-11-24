@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Registered custom properties so the two-tier artwork accent tokens
+   interpolate smoothly (600ms) instead of snapping between covers. */
+@property --accent-dynamic {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e04f3e;
+}
+@property --accent-dynamic-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+@property --accent-on-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d43d2c;
+}
+
+:root {
+  color-scheme: light;
+
+  --bg-gallery: #f7f6f2;
+  --bg-glass: rgba(255, 255, 255, 0.84);
+
+  --ink-primary: #141413;
+
+  --studio-blue: #2563eb;
+
+  --accent-dynamic: #e04f3e;
+  --accent-dynamic-ink: #ffffff;
+  --accent-on-light: #d43d2c;
+
+  --hairline: rgba(20, 20, 19, 0.08);
+  --shadow-glass: 0 20px 44px -14px rgba(20, 20, 19, 0.075);
+
+  transition:
+    --accent-dynamic 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    --accent-dynamic-ink 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    --accent-on-light 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink-primary);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background-color: var(--bg-gallery);
+  /* The dot grid is painted by <DotGrid /> so it can react to the pointer. */
+  background-image: radial-gradient(
+    circle at 50% 38%,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(247, 246, 242, 0.4) 65%
+  );
+  background-size: 100% 100%;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+@layer components {
+  .glass-card {
+    background: var(--bg-glass);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .telemetry {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .ne-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 20, 19, 0.16) transparent;
+  }
+  .ne-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .ne-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .ne-scroll::-webkit-scrollbar-thumb {
+    background: rgba(20, 20, 19, 0.16);
+    border-radius: 9999px;
+  }
+  .ne-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(20, 20, 19, 0.28);
+  }
+
+  .dock-clearance {
+    padding-bottom: calc(124px + env(safe-area-inset-bottom));
+  }
+
+  /* Platter sizing: mobile prioritises an above-the-fold record, desktop the
+     3-column gallery stage. */
+  .platter-size {
+    width: min(256px, 66vw, 38dvh);
+    aspect-ratio: 1 / 1;
+  }
+  @media (min-width: 768px) {
+    .platter-size {
+      width: clamp(240px, 32vw, 340px);
+    }
+  }
+  @media (min-width: 1024px) {
+    .platter-size {
+      width: clamp(240px, 27vw, 420px);
+    }
+  }
+}
+
+@keyframes spinBootVinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes barPulse {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-spin-vinyl {
+  animation: spinBootVinyl 1.8s linear infinite;
+}
+
+.animate-spin-seal {
+  animation: spinBootVinyl 28s linear infinite;
+}
+
+.animate-pulse-dot {
+  animation: nePulse 2s ease-in-out infinite;
+}
+
+.animate-toast-in {
+  animation: toastIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-vinyl,
+  .animate-spin-seal,
+  .animate-pulse-dot,
+  .animate-toast-in {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+  }
+
+  :root {
+    transition: none;
+  }
+}
